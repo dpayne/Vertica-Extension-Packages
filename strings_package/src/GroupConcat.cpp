@@ -25,12 +25,18 @@ class GroupConcat : public TransformFunction
                                   PartitionReader &input_reader, 
                                   PartitionWriter &output_writer)
     {
-        if (input_reader.getNumCols() != 1)
-            vt_report_error(0, "Function only accepts 1 argument, but %zu provided", input_reader.getNumCols());
+        if (input_reader.getNumCols() > 2)
+            vt_report_error(0, "Function only accepts 2 arguments, but %zu provided", input_reader.getNumCols());
 
         ostringstream oss;
         bool first = true;
         bool exceeded = false;
+        std::string separator = ",";
+        if (input_reader.getNumCols() = 2)
+        {
+          const VString &separatorElem = input_reader.getStringRef(1);
+          separator = separatorElem.str();
+        }
         do {
             const VString &elem = input_reader.getStringRef(0);
 
@@ -47,12 +53,15 @@ class GroupConcat : public TransformFunction
                 if (curpos > LINE_MAX)
                 {
                     exceeded = true;
-                    if (first) oss << "...";
-                    else oss << ", ...";
+                    if (!first)
+                    {
+                      oss << separator << " ";
+                    }
+                    oss << "...";
                 }
                 else
                 {
-                    if (!first) oss << ", ";
+                    if (!first) oss << separator;
                     first = false;
                     oss << s;
                 }

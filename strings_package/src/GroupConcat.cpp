@@ -32,7 +32,7 @@ class GroupConcat : public TransformFunction
         bool first = true;
         bool exceeded = false;
         std::string separator = ",";
-        if (input_reader.getNumCols() = 2)
+        if (input_reader.getNumCols() == 2)
         {
           const VString &separatorElem = input_reader.getStringRef(1);
           separator = separatorElem.str();
